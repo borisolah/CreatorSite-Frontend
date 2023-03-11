@@ -1,34 +1,31 @@
 const express = require("express");
-const cors = require("cors");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes");
+const cookieParser = require("cookie-parser");
 
 const app = express();
-const PORT = process.env.port || 3000;
 
-app.use(cors());
-
-app.options("*", (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Authorization, Content-Length, X-Requested-With"
-  );
-  res.send(200);
-});
-
+// middleware
+app.use(express.static("public"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - ${req.ip}`);
-  next();
-});
+app.use(cookieParser());
 
+// view engine
+app.set("view engine", "ejs");
+const dbURI = "hiddenpasswordcomeshere";
+mongoose
+  .connect(dbURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then((result) => app.listen(3000))
+  .catch((err) => console.log(err));
+
+// routes
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/views/index.html");
+  res.send("idemonoobok");
+  console.log("connected");
 });
-
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/views/index.html");
-});
-
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+app.get("/smoothies", (req, res) => res.render("smoothies"));
+app.use(authRoutes);

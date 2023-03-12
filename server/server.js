@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const app = express();
 
@@ -9,10 +10,12 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 // view engine
 app.set("view engine", "ejs");
-const dbURI = "hiddenpasswordcomeshere";
+const dbURI =
+  "mongodb+srv://borisz0929:yW9M9KivNC1XVdW1@cluster0.foweg.mongodb.net/node-auth";
 mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
@@ -22,10 +25,4 @@ mongoose
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
 
-// routes
-app.get("/", (req, res) => {
-  res.send("idemonoobok");
-  console.log("connected");
-});
-app.get("/smoothies", (req, res) => res.render("smoothies"));
 app.use(authRoutes);

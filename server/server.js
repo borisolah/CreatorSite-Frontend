@@ -15,7 +15,7 @@ app.use(cors());
 // view engine
 app.set("view engine", "ejs");
 const dbURI =
-  "mongodb+srv://borisz0929:yW9M9KivNC1XVdW1@cluster0.foweg.mongodb.net/node-auth";
+  "username+password come here";
 mongoose
   .connect(dbURI, {
     useNewUrlParser: true,

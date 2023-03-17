@@ -22,7 +22,7 @@ const handleErrors = (err) => {
 
 const dayInSeconds = 86400;
 const expirationTime = 3 * dayInSeconds;
-const expTimeMilisec = expirationTime * 1000
+const expirationTimeMiliseconds = expirationTime * 1000
 const createToken = (id) => {
   return jwt.sign({ id }, "string secret comes here", {
     expiresIn: expirationTime,
@@ -44,7 +44,7 @@ module.exports.signup_post = async (req, res) => {
   try {
     const user = await User.create({ email, password });
     const token = createToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: expTimeMilisec });
+    res.cookie("jwt", token, { httpOnly: true, maxAge: expirationTimeMiliseconds });
     res.status(201).json({ user: user._id });
   } catch (err) {
     const errors = handleErrors(err);

@@ -12,8 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-// view engine
-app.set("view engine", "ejs");
+
 const dbURI =
   "username+password come here";
 mongoose

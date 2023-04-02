@@ -12,16 +12,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-
 const dbURI =
-  "username+password come here";
+  "mongodb+srv://borisz0929:yW9M9KivNC1XVdW1@cluster0.foweg.mongodb.net/node-auth";
 mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
   })
-  .then((result) => app.listen(3000))
+  .then((result) => app.listen(3500))
   .catch((err) => console.log(err));
 
 app.use(authRoutes);

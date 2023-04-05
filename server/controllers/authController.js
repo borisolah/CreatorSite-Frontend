@@ -1,60 +1,44 @@
-const User = require("../models/User");
+const User = require("../model/User");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const daysInMiliseconds = 86400000;
 
-//error handler
-const handleErrors = (err) => {
-  console.log(err.message, err.code);
-  let errors = { email: "", password: "" };
-
-  //duplicate error
-  if (err.code === 11000) {
-    errors.email = "That E-mail is already registered.";
-    return errors;
-  }
-  if (err.message.includes("user validation failed")) {
-    // validation errors
-    Object.values(err.errors).forEach(({ properties }) => {
-      errors[properties.path] = properties.message;
-    });
-  }
-  return errors;
-};
-
-const dayInSeconds = 86400;
-const expirationTime = 3 * dayInSeconds;
-const expirationTimeMiliseconds = expirationTime * 1000;
-const createToken = (id) => {
-  return jwt.sign({ id }, "string secret comes here", {
-    expiresIn: expirationTime,
-  });
-};
-
-// controller actions
-module.exports.signup_get = (req, res) => {
-  res.send("signup");
-};
-
-module.exports.login_get = (req, res) => {
-  res.send("login");
-};
-
-module.exports.signup_post = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.create({ email, password });
-    const token = createToken(user._id);
-    res.cookie("jwt", token, {
+const handleLogin = async (req, res) => {
+  const { user, pwd } = req.body;
+  if (!user || !pwd)
+    return res
+      .status(400)
+      .json({ message: "Username and password are required." });
+  const foundUser = await User.findOne({ username: user }).exec();
+  if (!foundUser) return res.sendStatus(401); //Unauthorized
+  // evaluate password
+  const match = await bcrypt.compare(pwd, foundUser.password);
+  if (match) {
+    const roles = Object.values(foundUser.roles);
+    // create JWTs
+    const accessToken = jwt.sign(
+      { UserInfo: { username: foundUser.username, roles: roles } },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "55m" }
+    );
+    const refreshToken = jwt.sign(
+      { username: foundUser.username },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "3d" }
+    );
+    // Saving refreshToken with current user
+    foundUser.refreshToken = refreshToken;
+    const result = await foundUser.save();
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      maxAge: expirationTimeMiliseconds,
+      sameSite: "None",
+      secure: true,
+      maxAge: daysInMiliseconds,
     });
-    res.status(201).json({ user: user._id });
-  } catch (err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    res.json({ accessToken });
+  } else {
+    res.sendStatus(401);
   }
 };
 
-module.exports.login_post = async (req, res) => {
-  res.send("user login");
-};
+module.exports = { handleLogin };

@@ -17,7 +17,7 @@
     "validator": "^13.9.0"
   },
   "scripts": {
-    "devStart": "nodemon app.js"
+    "devStart": "nodemon server.js"
   },
   "repository": {
     "type": "git"

@@ -6,8 +6,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
-    // Add code to send login data to server
   };
 
   return (
@@ -21,7 +19,7 @@ const Login = () => {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-      <div className="email error">some error</div>
+      <div className="email error">Please Enter A Valid E-Mail</div>
       <label htmlFor="password">Password</label>
       <input
         type="password"

@@ -1,27 +1,43 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const authRoutes = require("./routes/authRoutes");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-
 const app = express();
+const path = require("path");
+const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
+const { logger } = require("./middleware/logEvents");
+const errorHandler = require("./middleware/errorHandler");
+const verifyJWT = require("./middleware/verifyJWT");
+const cookieParser = require("cookie-parser");
+const credentials = require("./middleware/credentials");
+const connectDB = require("./config/dbConn");
+const PORT = process.env.PORT || 3500;
 
-// middleware
-app.use(express.static("public"));
+connectDB();
+app.use(logger);
+app.use(credentials);
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
+app.use("/", require("./routes/root"));
+app.use("/register", require("./routes/register"));
+app.use("/auth", require("./routes/auth"));
+app.use("/refresh", require("./routes/refresh"));
+app.use("/logout", require("./routes/logout"));
 
-const dbURI =
-  "username+password come here";
-mongoose
-  .connect(dbURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
-  .then((result) => app.listen(3000))
-  .catch((err) => console.log(err));
+app.use(verifyJWT);
+app.use("/users", require("./routes/api/users"));
 
-app.use(authRoutes);
+app.all("*", (req, res) => {
+  res.status(404);
+  res.type("txt").send("404 Not Found");
+});
+
+app.use(errorHandler);
+
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB");
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});

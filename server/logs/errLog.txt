@@ -48,3 +48,9 @@
 20230403	01:45:12	660c453c-03dc-418c-b544-06b0e3bfa0aa	SyntaxError: Unexpected token e in JSON at position 0
 20230403	01:45:46	ed84e129-42e6-43fd-afbe-87cf04c83538	SyntaxError: Unexpected token e in JSON at position 0
 20230405	12:29:12	059afd3c-02af-4bd3-a128-8056ae39d869	TypeError: rolesArray.includes(...).find is not a function
+20230513	13:07:40	225201e7-8a15-44b0-928e-ccd919f07cfa	Error: Not allowed by CORS
+20230513	13:07:40	19eb3593-a33e-4882-90b1-2676468d283a	Error: Not allowed by CORS
+20230513	13:07:40	bc10297c-c540-484a-959e-a0d24e09ce59	Error: Not allowed by CORS
+20230513	13:07:40	a574c6f1-74d1-47b4-a18c-107cda366afc	Error: Not allowed by CORS
+20230513	13:07:41	6c111a73-0bd2-4b62-9a13-9169c793fccf	Error: Not allowed by CORS
+20230513	13:07:41	f896e723-71e2-4aa8-90e6-416d64f0012f	Error: Not allowed by CORS

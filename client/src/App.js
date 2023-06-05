@@ -10,6 +10,7 @@ import Editor from "./pagecomponents/EditorPage";
 import RequireAuth from "./pagecomponents/authcontrollers/RequireAuth";
 import PurchasePlan from "./pagecomponents/PurchasePlan";
 import Deploy from "./pagecomponents/DeployPage";
+import PersistLogin from "./pagecomponents/logincomponents/PersistLogin";
 
 function App() {
   return (
@@ -26,7 +27,6 @@ function App() {
           }
         />
         <Route path="/purchaseplan" element={<PurchasePlan />} />
-
         <Route
           path="/login"
           element={
@@ -35,12 +35,14 @@ function App() {
             </Box>
           }
         />
-        <Route element={<RequireAuth allowedRoles={[1974]} />}>
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/about" element={<About />} />{" "}
-        </Route>
-        <Route element={<RequireAuth allowedRoles={[5150]} />}>
-          <Route path="/deploy" element={<Deploy />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={[1974]} />}>
+            <Route path="/editor" element={<Editor />} />
+            <Route path="/about" element={<About />} />{" "}
+          </Route>
+          <Route element={<RequireAuth allowedRoles={[5150]} />}>
+            <Route path="/deploy" element={<Deploy />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

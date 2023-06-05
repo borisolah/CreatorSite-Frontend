@@ -29,10 +29,8 @@ const LoginForm = () => {
           withCredentials: true,
         }
       );
-      console.log(JSON.stringify(response?.data));
       const accessToken = response?.data?.accessToken;
       const roles = response?.data?.roles;
-      console.log(roles);
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");

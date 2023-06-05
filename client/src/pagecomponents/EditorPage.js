@@ -1,7 +1,9 @@
-import React from "react";
-
 const EditorPage = () => {
-  return <div>EditorPage</div>;
+  return (
+    <article>
+      <h2>Testing refresh token...</h2>
+    </article>
+  );
 };
 
 export default EditorPage;

@@ -1,6 +1,6 @@
-import React from "react";
 import { Box, Link } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import useLogout from "./hooks/useLogout";
 
 const Navbar = () => {
   const navItems = [
@@ -12,6 +12,12 @@ const Navbar = () => {
     { name: "Purchase Plan", path: "/purchaseplan" },
     { name: "Deploy", path: "/deploy" },
   ];
+  const navigate = useNavigate();
+  const logout = useLogout();
+  const signOut = async () => {
+    await logout();
+    navigate("/");
+  };
 
   return (
     <Box
@@ -52,7 +58,8 @@ const Navbar = () => {
               {item.name}
             </Link>
           </Box>
-        ))}
+        ))}{" "}
+        <button onClick={signOut}>Sign Out</button>
       </Box>
     </Box>
   );

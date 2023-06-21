@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 export default function MapComponent() {
   return (
     <Box>
-      <Text>IDEMO</Text>
+      <Text>Map Component</Text>
     </Box>
   );
 }

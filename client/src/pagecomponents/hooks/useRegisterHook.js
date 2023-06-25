@@ -1,12 +1,12 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../authcontrollers/axios";
 const useRegister = () => {
   const [loading, setLoading] = useState(false);
 
   const register = async (email, username, password) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3500/register", {
+      const response = await axios.post("/register", {
         email,
         username,
         password,

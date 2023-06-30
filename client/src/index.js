@@ -5,6 +5,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { MantineProvider } from "@mantine/core";
 import { AuthProvider } from "./pagecomponents/authcontrollers/authProvider";
+import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+
+disableReactDevTools();
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

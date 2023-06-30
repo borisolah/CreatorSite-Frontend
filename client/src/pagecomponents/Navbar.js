@@ -21,7 +21,7 @@ const Navbar = () => {
   }
 
   const navigate = useNavigate();
-  const logout = useLogout();
+  const { logout } = useLogout();
   const signOut = async () => {
     await logout();
     navigate("/");
@@ -37,7 +37,7 @@ const Navbar = () => {
       alignItems="center"
       height="29px"
       fontSize="1.3rem"
-      zIndex="1000"
+      zIndex="2"
     >
       <Box
         as="ul"

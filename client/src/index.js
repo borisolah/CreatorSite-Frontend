@@ -1,21 +1,24 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
+import ReactDOM from "react-dom";
+import store from "./redux/store";
 import App from "./App";
+import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 import { MantineProvider } from "@mantine/core";
-import { AuthProvider } from "./pagecomponents/authcontrollers/authProvider";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+import "./index.css";
 
-disableReactDevTools();
+if (process.env.NODE_ENV === "production") {
+  disableReactDevTools();
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <AuthProvider>
+      <Provider store={store}>
         <App />
-      </AuthProvider>
+      </Provider>
     </MantineProvider>
   </React.StrictMode>
 );

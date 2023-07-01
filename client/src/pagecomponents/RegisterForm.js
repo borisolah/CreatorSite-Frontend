@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Paper, Col, Grid, TextInput, Button, Text } from "@mantine/core";
 import { Link, useNavigate } from "react-router-dom";
-import useRegister from "./hooks/useRegisterHook";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../redux/slices/registerSlice";
 
 function RegisterForm() {
   const [email, setEmail] = useState("");
@@ -9,7 +10,8 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isMatching, setIsMatching] = useState(true);
-  const { register, loading } = useRegister();
+  const loading = useSelector((state) => state.register.loading);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
@@ -31,7 +33,7 @@ function RegisterForm() {
   const handleRegister = async (event) => {
     event.preventDefault();
     if (email && username && password && isMatching) {
-      await register(email, username, password);
+      dispatch(registerUser({ email, username, password }));
       navigate("/");
     }
   };

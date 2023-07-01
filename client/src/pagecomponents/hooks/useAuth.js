@@ -1,10 +1,8 @@
-import { useContext, useDebugValue } from "react";
-import AuthContext from "../authcontrollers/authProvider";
+import { useSelector } from "react-redux";
 
 const useAuth = () => {
-  const { auth } = useContext(AuthContext);
-  useDebugValue(auth, (auth) => (auth?.user ? "Logged In" : "Logged Out"));
-  return useContext(AuthContext);
+  const auth = useSelector((state) => state.auth);
+  return { auth };
 };
 
 export default useAuth;

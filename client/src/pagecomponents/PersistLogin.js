@@ -1,11 +1,16 @@
+// PersistLogin.js
 import { Outlet } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../redux/slices/loadingSlice";
 import useRefreshToken from "./hooks/useRefreshToken";
 import useAuth from "./hooks/useAuth";
 import useLogout from "./hooks/useLogout";
 import jwt_decode from "jwt-decode";
+
 const PersistLogin = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.loading);
   const refresh = useRefreshToken();
   const logout = useLogout();
   const { auth } = useAuth();
@@ -15,12 +20,8 @@ const PersistLogin = () => {
 
     const verifyRefreshToken = async () => {
       try {
-        const attemptTime = new Date();
-
         // Refreshing the token
         const newAccessToken = await refresh();
-
-        const receiveTime = new Date();
 
         // Schedule next refresh before the new access token expires
         const decoded = jwt_decode(newAccessToken);
@@ -35,7 +36,7 @@ const PersistLogin = () => {
         console.error("Error in refreshing token:", err);
         logout();
       } finally {
-        isMounted && setIsLoading(false);
+        isMounted && dispatch(setLoading(false));
       }
     };
 
@@ -48,16 +49,14 @@ const PersistLogin = () => {
       if (isExpired) {
         verifyRefreshToken();
       } else {
-        setIsLoading(false);
+        dispatch(setLoading(false));
       }
     } else {
       verifyRefreshToken();
     }
 
     return () => (isMounted = false);
-  }, []);
-
-  useEffect(() => {}, [isLoading]);
+  }, [auth, dispatch, logout, refresh]);
 
   return <>{isLoading ? <p>Loading...</p> : <Outlet />}</>;
 };

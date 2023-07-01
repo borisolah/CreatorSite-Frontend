@@ -1,50 +1,25 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Paper, Col, Grid, TextInput, Button, Text } from "@mantine/core";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "./authcontrollers/axios";
-import useAuth from "./hooks/useAuth";
-
-const LOGIN_URL = "/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/slices/loginSlice";
 
 const LoginForm = () => {
-  const { setAuth } = useAuth();
-  const userRef = useRef();
-  const errRef = useRef();
+  const dispatch = useDispatch();
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+  const { loading, error } = useSelector((state) => state.login);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ user, pwd }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      const accessToken = response?.data?.accessToken;
-      setAuth({ user, accessToken });
+    dispatch(loginUser({ user, pwd }));
+    if (!error) {
       setUser("");
       setPwd("");
       navigate(from, { replace: true });
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("Login Failed");
-      }
-      errRef.current.focus();
     }
   };
 
@@ -66,17 +41,15 @@ const LoginForm = () => {
             borderRadius: "5%",
           }}
         >
-          {" "}
           <form onSubmit={handleSubmit}>
             <Grid gutter="md" style={{ margin: "5px" }}>
               <Col span={12}>
-                <Text color="red">{errMsg}</Text>
+                <Text color="red">{error ? error : ""}</Text>
 
                 <TextInput
                   label="Username"
                   type="text"
                   placeholder="Enter your username"
-                  ref={userRef}
                   autoComplete="off"
                   onChange={(e) => setUser(e.target.value)}
                   value={user}
@@ -115,10 +88,10 @@ const LoginForm = () => {
                   Login
                 </Button>
               </Col>
-            </Grid>{" "}
+            </Grid>
           </form>
         </Paper>
-      </div>{" "}
+      </div>
     </>
   );
 };

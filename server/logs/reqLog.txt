@@ -8463,3 +8463,5 @@
 20230627	16:09:08	a4ef6040-3df4-4c0a-810b-cdf79984c323	GET	http://localhost:3000	/refresh
 20230627	16:09:08	4e400a9f-9fa2-4e4a-847e-04abe4f4e71e	GET	http://localhost:3000	/logout
 20230627	16:09:08	a1e805c5-8888-4c2a-a19b-3ec84505b1f1	GET	http://localhost:3000	/logout
+20230630	08:16:58	f7eb3b09-b24e-467f-8a9f-7d9ec8126bdb	OPTIONS	http://localhost:3000	/auth
+20230630	08:16:58	51a0151c-de24-465f-8749-69b9f8d334ac	POST	http://localhost:3000	/auth

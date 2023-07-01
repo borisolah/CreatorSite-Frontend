@@ -1,4 +1,3 @@
-// RequireAuth.js
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";

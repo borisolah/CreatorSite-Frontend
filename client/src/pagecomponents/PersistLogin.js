@@ -7,8 +7,8 @@ import jwt_decode from "jwt-decode";
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
-  const { logout } = useLogout();
+  const auth = useAuth();
+  const logout = useLogout();
 
   useEffect(() => {
     let isMounted = true;

@@ -4,8 +4,8 @@ import useLogout from "./hooks/useLogout";
 import useAuth from "./hooks/useAuth";
 
 const Navbar = () => {
-  const { auth } = useAuth();
-  const isLoggedIn = !!auth?.accessToken;
+  const auth = useAuth();
+  const isLoggedIn = !!auth.auth?.accessToken;
   const navItems = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
@@ -14,14 +14,14 @@ const Navbar = () => {
     { name: "Deploy", path: "/deploy" },
   ];
 
-  // Only add Login and Register to navItems if user is not logged in
+  // Only add and Register to navItems if user is not logged in
   if (!isLoggedIn) {
     navItems.push({ name: "Login", path: "/login" });
     navItems.push({ name: "Register", path: "/register" }); // Moved after Login
   }
 
   const navigate = useNavigate();
-  const { logout } = useLogout();
+  const logout = useLogout();
   const signOut = async () => {
     await logout();
     navigate("/");

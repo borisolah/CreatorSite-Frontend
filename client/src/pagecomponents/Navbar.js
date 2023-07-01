@@ -16,7 +16,7 @@ const Navbar = () => {
     { name: "Deploy", path: "/deploy" },
   ];
 
-  // Only add Login and Register to navItems if user is not logged in
+  // Only add and Register to navItems if user is not logged in
   if (!isLoggedIn) {
     navItems.push({ name: "Login", path: "/login" });
     navItems.push({ name: "Register", path: "/register" }); // Moved after Login
@@ -38,7 +38,7 @@ const Navbar = () => {
       alignItems="center"
       height="29px"
       fontSize="1.3rem"
-      zIndex="1000"
+      zIndex="2"
     >
       <Box
         as="ul"

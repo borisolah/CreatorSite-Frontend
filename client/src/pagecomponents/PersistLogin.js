@@ -11,26 +11,15 @@ const PersistLogin = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.loading);
   const refresh = useRefreshToken();
+  const auth = useAuth();
   const logout = useLogout();
-  const { auth } = useAuth();
 
   useEffect(() => {
     let isMounted = true;
 
     const verifyRefreshToken = async () => {
       try {
-        // Refreshing the token
-        const newAccessToken = await refresh();
-
-        // Schedule next refresh before the new access token expires
-        const decoded = jwt_decode(newAccessToken);
-        const expTime = decoded.exp * 1000;
-
-        // Set timeout to verify the refresh token before it expires
-        const timeoutDuration = expTime - new Date().getTime() - 5000;
-        setTimeout(() => {
-          verifyRefreshToken();
-        }, timeoutDuration);
+        await refresh();
       } catch (err) {
         console.error("Error in refreshing token:", err);
         logout();

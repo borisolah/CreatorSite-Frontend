@@ -36,7 +36,7 @@ const HomePage = () => {
           </Link>
           <Link to="/register" style={{ textDecoration: "none" }}>
             <Button fullWidth color="green" radius="xl">
-              Try For Free
+              Register
             </Button>
           </Link>
         </Grid>

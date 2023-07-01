@@ -10,7 +10,7 @@ import Editor from "./pagecomponents/EditorPage";
 import RequireAuth from "./pagecomponents/authcontrollers/RequireAuth";
 import PurchasePlan from "./pagecomponents/PurchasePlan";
 import Deploy from "./pagecomponents/DeployPage";
-import PersistLogin from "./pagecomponents/logincomponents/PersistLogin";
+import PersistLogin from "./pagecomponents/PersistLogin";
 
 function App() {
   return (

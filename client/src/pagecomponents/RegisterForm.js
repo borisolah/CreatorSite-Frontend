@@ -1,40 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Paper, Col, Grid, TextInput, Button, Text } from "@mantine/core";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../redux/slices/registerSlice";
+import {
+  registerUser,
+  setEmail,
+  setUsername,
+  setPassword,
+  setRepeatPassword,
+  clearFields,
+} from "../redux/slices/registerSlice";
+import useAuth from "./hooks/useAuth";
 
 function RegisterForm() {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [isMatching, setIsMatching] = useState(true);
-  const loading = useSelector((state) => state.register.loading);
+  const { email, username, password, repeatPassword, isMatching, loading } =
+    useSelector((state) => state.register);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+  const auth = useAuth();
+
+  useEffect(() => {
+    if (auth.user) {
+      dispatch(clearFields());
+      navigate(from, { replace: true });
+    }
+  }, [auth, dispatch, navigate, from]);
 
   const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+    dispatch(setEmail(event.target.value));
   };
   const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+    dispatch(setUsername(event.target.value));
   };
-
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+    dispatch(setPassword(event.target.value));
   };
-
   const handleRepeatPasswordChange = (event) => {
-    setRepeatPassword(event.target.value);
-    setIsMatching(event.target.value === password);
+    dispatch(setRepeatPassword(event.target.value));
   };
 
   const handleRegister = async (event) => {
     event.preventDefault();
     if (email && username && password && isMatching) {
       dispatch(registerUser({ email, username, password }));
-      navigate("/");
     }
   };
 
@@ -56,8 +66,6 @@ function RegisterForm() {
         }}
       >
         <form onSubmit={handleRegister}>
-          {" "}
-          {/* Wrap elements in a form tag */}
           <Grid gutter="md" style={{ margin: "5px" }}>
             <Col span={12}>
               <TextInput

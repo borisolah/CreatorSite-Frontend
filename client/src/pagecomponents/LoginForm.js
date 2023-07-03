@@ -1,27 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Paper, Col, Grid, TextInput, Button, Text } from "@mantine/core";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/slices/loginSlice";
+import {
+  loginUser,
+  setInputUser,
+  setInputPwd,
+  clearInputUserPwd,
+} from "../redux/slices/loginSlice";
+import useAuth from "./hooks/useAuth";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
-  const { loading, error } = useSelector((state) => state.login);
+  const { inputUser, inputPwd, error } = useSelector((state) => state.login);
+  const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser({ user, pwd }));
-    if (!error) {
-      setUser("");
-      setPwd("");
+    dispatch(loginUser({ user: inputUser, pwd: inputPwd }));
+  };
+
+  // useEffect - login in Redux is async
+  // navigate waits for login to happen
+  useEffect(() => {
+    if (auth.user) {
+      dispatch(clearInputUserPwd());
       navigate(from, { replace: true });
     }
-  };
+  }, [auth, dispatch, navigate, from]);
 
   return (
     <>
@@ -51,8 +60,8 @@ const LoginForm = () => {
                   type="text"
                   placeholder="Enter your username"
                   autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
+                  onChange={(e) => dispatch(setInputUser(e.target.value))}
+                  value={inputUser}
                   required
                 />
               </Col>
@@ -63,8 +72,8 @@ const LoginForm = () => {
                   label="Password"
                   type="password"
                   placeholder="Enter your password"
-                  onChange={(e) => setPwd(e.target.value)}
-                  value={pwd}
+                  onChange={(e) => dispatch(setInputPwd(e.target.value))}
+                  value={inputPwd}
                   required
                 />
               </Col>

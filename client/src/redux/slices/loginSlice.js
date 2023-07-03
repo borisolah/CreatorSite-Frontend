@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../pagecomponents/authcontrollers/axios";
+import store from "../store";
+import { setAuth } from "./authSlice";
 
 export const loginUser = createAsyncThunk(
   "login/loginUser",
@@ -13,6 +15,10 @@ export const loginUser = createAsyncThunk(
           withCredentials: true,
         }
       );
+      store.dispatch(
+        setAuth({ user: user, accessToken: response.data.accessToken })
+      );
+
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -22,8 +28,26 @@ export const loginUser = createAsyncThunk(
 
 const loginSlice = createSlice({
   name: "login",
-  initialState: { accessToken: null, user: null, loading: false, error: null },
-  reducers: {},
+  initialState: {
+    loading: false,
+    error: null,
+    inputUser: "",
+    inputPwd: "",
+  },
+
+  reducers: {
+    setInputUser: (state, action) => {
+      state.inputUser = action.payload;
+    },
+    setInputPwd: (state, action) => {
+      state.inputPwd = action.payload;
+    },
+    clearInputUserPwd: (state) => {
+      state.inputUser = "";
+      state.inputPwd = "";
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -31,8 +55,6 @@ const loginSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.accessToken = action.payload.accessToken;
-        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -40,5 +62,8 @@ const loginSlice = createSlice({
       });
   },
 });
+
+export const { setInputUser, setInputPwd, clearInputUserPwd } =
+  loginSlice.actions;
 
 export default loginSlice.reducer;

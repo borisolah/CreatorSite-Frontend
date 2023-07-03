@@ -13,7 +13,6 @@ const PersistLogin = () => {
   const refresh = useRefreshToken();
   const auth = useAuth();
   const logout = useLogout();
-
   useEffect(() => {
     let isMounted = true;
 
@@ -27,13 +26,10 @@ const PersistLogin = () => {
         isMounted && dispatch(setLoading(false));
       }
     };
-
-    // Verify the access token
     if (auth?.accessToken) {
       const decoded = jwt_decode(auth.accessToken);
       const expTime = decoded.exp * 1000;
       const isExpired = new Date().getTime() > expTime;
-
       if (isExpired) {
         verifyRefreshToken();
       } else {
@@ -44,7 +40,7 @@ const PersistLogin = () => {
     }
 
     return () => (isMounted = false);
-  }, [auth, dispatch, logout, refresh]);
+  }, []);
 
   return <>{isLoading ? <p>Loading...</p> : <Outlet />}</>;
 };

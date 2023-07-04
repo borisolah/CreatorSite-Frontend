@@ -53,8 +53,11 @@ const LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <Grid gutter="md" style={{ margin: "5px" }}>
               <Col span={12}>
-                <Text color="red">{ error && {error}}</Text>
-
+            {error && (
+                <Text style={{ color: 'red' }}>
+                    {error}
+                </Text>
+            )}
                 <TextInput
                   label="Username"
                   type="text"

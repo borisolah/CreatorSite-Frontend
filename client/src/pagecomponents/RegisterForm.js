@@ -41,7 +41,7 @@ function RegisterForm() {
     dispatch(setRepeatPassword(event.target.value));
   };
 
-  const handleRegister = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (email && username && password && isMatching) {
       dispatch(registerUser({ email, username, password }));
@@ -65,7 +65,7 @@ function RegisterForm() {
           borderRadius: "5%",
         }}
       >
-        <form onSubmit={handleRegister}>
+        <form onSubmit={handleSubmit}>
           <Grid gutter="md" style={{ margin: "5px" }}>
             <Col span={12}>
               <TextInput

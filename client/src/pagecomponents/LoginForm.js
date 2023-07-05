@@ -1,52 +1,36 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect } from "react";
 import { Paper, Col, Grid, TextInput, Button, Text } from "@mantine/core";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "./authcontrollers/axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginUser,
+  setInputUser,
+  setInputPwd,
+  clearInputUserPwd,
+} from "../redux/slices/loginSlice";
 import useAuth from "./hooks/useAuth";
 
-const LOGIN_URL = "/auth";
-
 const LoginForm = () => {
-  const { setAuth } = useAuth();
-  const userRef = useRef();
-  const errRef = useRef();
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
-  const [errMsg, setErrMsg] = useState("");
+  const dispatch = useDispatch();
+  const { inputUser, inputPwd, error } = useSelector((state) => state.login);
+  const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ user, pwd }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      const accessToken = response?.data?.accessToken;
-      setAuth({ user, accessToken });
-      setUser("");
-      setPwd("");
-      navigate(from, { replace: true });
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("Login Failed");
-      }
-      errRef.current.focus();
-    }
+    dispatch(loginUser({ user: inputUser, pwd: inputPwd }));
   };
+
+  // useEffect - login in Redux is async
+  // navigate waits for login to happen
+  useEffect(() => {
+    if (auth.user) {
+      dispatch(clearInputUserPwd());
+      navigate(from, { replace: true });
+    }
+  }, [auth, dispatch, navigate, from]);
 
   return (
     <>
@@ -66,20 +50,21 @@ const LoginForm = () => {
             borderRadius: "5%",
           }}
         >
-          {" "}
           <form onSubmit={handleSubmit}>
             <Grid gutter="md" style={{ margin: "5px" }}>
               <Col span={12}>
-                <Text color="red">{errMsg}</Text>
-
+            {error && (
+                <Text style={{ color: 'red' }}>
+                    {error}
+                </Text>
+            )}
                 <TextInput
                   label="Username"
                   type="text"
                   placeholder="Enter your username"
-                  ref={userRef}
                   autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
+                  onChange={(e) => dispatch(setInputUser(e.target.value))}
+                  value={inputUser}
                   required
                 />
               </Col>
@@ -90,8 +75,8 @@ const LoginForm = () => {
                   label="Password"
                   type="password"
                   placeholder="Enter your password"
-                  onChange={(e) => setPwd(e.target.value)}
-                  value={pwd}
+                  onChange={(e) => dispatch(setInputPwd(e.target.value))}
+                  value={inputPwd}
                   required
                 />
               </Col>
@@ -115,10 +100,10 @@ const LoginForm = () => {
                   Login
                 </Button>
               </Col>
-            </Grid>{" "}
+            </Grid>
           </form>
         </Paper>
-      </div>{" "}
+      </div>
     </>
   );
 };

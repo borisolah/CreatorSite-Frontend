@@ -1,24 +1,27 @@
+import { useDispatch } from "react-redux";
 import axios from "../authcontrollers/axios";
-import useAuth from "./useAuth";
+import { setAuth } from "../../redux/slices/authSlice";
+import jwt_decode from "jwt-decode";
 
 const useRefreshToken = () => {
-  const { setAuth } = useAuth();
+  const dispatch = useDispatch();
 
   const refresh = async () => {
-    const response = await axios.get("/refresh", {
-      withCredentials: true,
-    });
-
-    setAuth((prev) => {
-      return {
-        ...prev,
-        userName: response.data.userName,
-        roles: response.data.roles,
-        accessToken: response.data.accessToken,
-      };
-    });
-    return response.data.accessToken;
+    try {
+      const response = await axios.get("/refresh", {
+        withCredentials: true,
+      });
+      const accessToken = response.data.accessToken;
+      const decoded = jwt_decode(accessToken);
+      const user = decoded.UserInfo.username;
+      const roles = decoded.UserInfo.roles;
+      dispatch(setAuth({ user, accessToken }));
+      return accessToken;
+    } catch (err) {
+      console.error(err);
+    }
   };
+
   return refresh;
 };
 

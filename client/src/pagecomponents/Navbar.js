@@ -1,11 +1,13 @@
 import { Box, Link } from "@chakra-ui/react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import useLogout from "./hooks/useLogout";
-import useAuth from "./hooks/useAuth";
+import { logout } from "../redux/slices/authSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
-  const auth = useAuth();
-  const isLoggedIn = !!auth.auth?.accessToken;
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const isLoggedIn = !!auth?.accessToken;
   const navItems = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
@@ -21,9 +23,8 @@ const Navbar = () => {
   }
 
   const navigate = useNavigate();
-  const logout = useLogout();
   const signOut = async () => {
-    await logout();
+    dispatch(logout());
     navigate("/");
   };
 

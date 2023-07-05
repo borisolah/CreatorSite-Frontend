@@ -16,14 +16,16 @@ Site Creator is a web application that empowers small businesses and individuals
 - Server setup
 - ReactJS client setup
 - MongoDB Atlas as the database backend
-- Integration of Redux (in progress)
-- Persistent login features (in progress)
+- Integration of Redux 
+- Persistent login features
+- Main page for creating websites using GrapeJS ( in progress )
+
 
 ### Planned
 
-- Main page for creating websites using GrapeJS
 - Gallery page for showcasing websites created by users
-- Premium Plan with features like guided steps for deployment and stability
+- Premium Plan with features like guided steps for deployment
+- Styling, creating an About page, styling the Home page with some animated effects
 
 ## Getting Started
 

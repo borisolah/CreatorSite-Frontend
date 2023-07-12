@@ -2,6 +2,7 @@ const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 
 const handleRefreshToken = async (req, res) => {
+  // ask it about cookies, sghouldnt it come from local storage?
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(401);
   const refreshToken = cookies.jwt;

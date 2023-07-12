@@ -1,7 +1,9 @@
-import { Box, Link } from "@chakra-ui/react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { logout } from "../redux/slices/authSlice";
+import React from "react";
+import { Container, Text } from "@mantine/core";
+import { Link as RouterLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const auth = useSelector((state) => state.auth);
@@ -16,10 +18,9 @@ const Navbar = () => {
     { name: "Deploy", path: "/deploy" },
   ];
 
-  // Only add and Register to navItems if user is not logged in
   if (!isLoggedIn) {
     navItems.push({ name: "Login", path: "/login" });
-    navItems.push({ name: "Register", path: "/register" }); // Moved after Login
+    navItems.push({ name: "Register", path: "/register" });
   }
 
   const navigate = useNavigate();
@@ -29,67 +30,76 @@ const Navbar = () => {
   };
 
   return (
-    <Box
-      as="nav"
-      position="sticky"
-      top="0"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="29px"
-      fontSize="1.3rem"
-      zIndex="2"
+    <Container
+      style={{
+        position: "sticky",
+        top: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80px",
+        zIndex: 2,
+      }}
     >
-      <Box
-        as="ul"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="80px"
-        maxW="1500px"
-        listStyleType="none"
+      <ul
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80px",
+          maxWidth: "1500px",
+          listStyleType: "none",
+          padding: 0,
+          margin: 0,
+        }}
       >
         {navItems.map((item, index) => (
-          <Box as="li" height="80px" key={index}>
-            <Link
-              as={RouterLink}
+          <li key={index} style={{ height: "80px" }}>
+            <Text
+              component={RouterLink}
               to={item.path}
-              display="flex"
-              alignItems="center"
-              textDecoration="none"
-              color="white"
-              fontSize="1.3rem"
-              textShadow="1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000"
-              justifyContent="center"
-              height="100%"
-              px="1.5rem"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                fontSize: "1.3rem",
+                color: "white",
+                textShadow:
+                  "1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000",
+                justifyContent: "center",
+                height: "100%",
+                padding: "0 1.5rem",
+              }}
             >
               {item.name}
-            </Link>
-          </Box>
+            </Text>
+          </li>
         ))}
         {isLoggedIn && (
-          <Box as="li" height="80px" background="transparent">
-            <Link
-              as={RouterLink}
+          <li style={{ height: "80px", background: "transparent" }}>
+            <Text
+              component={RouterLink}
               to="#"
               onClick={signOut}
-              display="flex"
-              alignItems="center"
-              textDecoration="none"
-              fontSize="1.3rem"
-              color="white"
-              textShadow="1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000"
-              justifyContent="center"
-              height="100%"
-              px="1.5rem"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                fontSize: "1.3rem",
+                color: "white",
+                textShadow:
+                  "1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000",
+                justifyContent: "center",
+                height: "100%",
+                padding: "0 1.5rem",
+              }}
             >
               Sign Out
-            </Link>
-          </Box>
+            </Text>
+          </li>
         )}
-      </Box>
-    </Box>
+      </ul>
+    </Container>
   );
 };
 

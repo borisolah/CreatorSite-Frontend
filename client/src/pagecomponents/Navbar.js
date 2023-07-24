@@ -3,11 +3,12 @@ import { Container, Text } from "@mantine/core";
 import { Link as RouterLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const isLoggedIn = !!auth?.accessToken;
   const navItems = [
@@ -17,6 +18,26 @@ const Navbar = () => {
     { name: "Purchase Plan", path: "/purchaseplan" },
     { name: "Deploy", path: "/deploy" },
   ];
+
+  const generalP = {
+    position: "sticky",
+    zIndex: 2,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "30px",
+  };
+
+  const editorP = {
+    position: "fixed",
+    top: -17,
+    left: "20%",
+    zIndex: 99999,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "80px",
+  };
 
   if (!isLoggedIn) {
     navItems.push({ name: "Login", path: "/login" });
@@ -28,19 +49,10 @@ const Navbar = () => {
     dispatch(logout());
     navigate("/");
   };
+  const currentStyle = location.pathname === "/editor" ? editorP : generalP;
 
   return (
-    <Container
-      style={{
-        position: "sticky",
-        top: 0,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "80px",
-        zIndex: 2,
-      }}
-    >
+    <Container style={currentStyle}>
       <ul
         style={{
           display: "flex",
